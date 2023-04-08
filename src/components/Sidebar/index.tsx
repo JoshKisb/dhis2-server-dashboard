@@ -1,19 +1,28 @@
 import * as React from "react";
 import Drawer from "@mui/material/Drawer";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { Box, Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Card,
+	CardActionArea,
+	CardContent,
+	Typography,
+} from "@mui/material";
+import { useServers } from "../../stores";
 
 const drawerWidth = 320;
 
 const Sidebar: React.FC<{}> = () => {
+	const store = useServers();
+
+	const handleAddServer = () => {
+		store.add({
+			id: store.servers.length + 1,
+			name: `Server ${store.servers.length + 1}`,
+		});
+	};
+
 	return (
 		<Drawer
 			sx={{
@@ -23,7 +32,7 @@ const Sidebar: React.FC<{}> = () => {
 					width: drawerWidth,
 					backgroundColor: "#f3f4f5",
 					marginTop: "48px",
-					paddingBottom: "100px",
+					paddingBottom: "120px",
 					boxSizing: "border-box",
 				},
 			}}
@@ -31,20 +40,27 @@ const Sidebar: React.FC<{}> = () => {
 			anchor="left"
 		>
 			<>
-				{["1", "2", "3", "4", "5", "6", "7"].map((text, index) => (
-					<Box sx={{ mx: 1, my: 1.5 }}>
+				{store.servers.map((server) => (
+					<Box sx={{ mx: 1, my: 1.2 }}>
 						<Card
-							key={text}
+							key={server.id}
 							sx={{
 								minWidth: 50,
-								backgroundColor: text === "2" ? "#dddedf" : "#fff",
+								backgroundColor:
+									server.id == store.selected ? "#dddedf" : "#fff",
 							}}
 						>
-							<CardContent>
-								<Typography variant="h4" color="text.primary" marginBottom={0}>
-									Server {text}
-								</Typography>
-							</CardContent>
+							<CardActionArea onClick={() => store.selectServer(server.id)}>
+								<CardContent>
+									<Typography
+										variant="h4"
+										color="text.primary"
+										marginBottom={0}
+									>
+										{server.name}
+									</Typography>
+								</CardContent>
+							</CardActionArea>
 						</Card>
 					</Box>
 				))}
@@ -57,7 +73,9 @@ const Sidebar: React.FC<{}> = () => {
 					}}
 				>
 					<Box sx={{ mx: 1, mb: "1rem", mt: "1.5rem" }}>
-						<Button variant="contained">New Instance</Button>
+						<Button variant="contained" onClick={handleAddServer}>
+							New Instance
+						</Button>
 					</Box>
 				</Box>
 			</>
