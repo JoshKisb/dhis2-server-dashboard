@@ -1,6 +1,5 @@
 import * as React from "react";
 import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
 import {
 	Box,
 	Button,
@@ -10,17 +9,23 @@ import {
 	Typography,
 } from "@mui/material";
 import { useServers } from "../../stores";
+import ServerConfig from "../ServerConfig";
+import ServerCard from "./ServerCard";
+import { useGetAllServersQuery } from "../../services/servers";
 
 const drawerWidth = 320;
 
 const Sidebar: React.FC<{}> = () => {
 	const store = useServers();
+	const { isLoading, data: servers, isError } = useGetAllServersQuery();
+	const [open, setOpen] = React.useState(false);
+
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	const handleAddServer = () => {
-		store.add({
-			id: store.servers.length + 1,
-			name: `Server ${store.servers.length + 1}`,
-		});
+		setOpen(true);
 	};
 
 	return (
@@ -40,30 +45,29 @@ const Sidebar: React.FC<{}> = () => {
 			anchor="left"
 		>
 			<>
-				{store.servers.map((server) => (
+				{!!servers && servers.length > 0 ? (
+					<>
+						{servers.map((server) => (
+							<ServerCard key={server.id} server={server} />
+						))}
+					</>
+				) : (
 					<Box sx={{ mx: 1, my: 1.2 }}>
-						<Card
-							key={server.id}
-							sx={{
-								minWidth: 50,
-								backgroundColor:
-									server.id == store.selected ? "#dddedf" : "#fff",
-							}}
-						>
-							<CardActionArea onClick={() => store.selectServer(server.id)}>
+						<Card sx={{ minWidth: 50 }}>
+							<CardActionArea onClick={handleAddServer}>
 								<CardContent>
 									<Typography
-										variant="h4"
-										color="text.primary"
+										variant="h5"
+										color="text.secondary"
 										marginBottom={0}
 									>
-										{server.name}
+										No Servers
 									</Typography>
 								</CardContent>
 							</CardActionArea>
 						</Card>
 					</Box>
-				))}
+				)}
 				<Box
 					sx={{
 						position: "fixed",
@@ -79,7 +83,7 @@ const Sidebar: React.FC<{}> = () => {
 					</Box>
 				</Box>
 			</>
-			<Divider />
+			<ServerConfig onClose={handleClose} open={open} />
 		</Drawer>
 	);
 };

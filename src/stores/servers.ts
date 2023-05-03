@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import {v4 as uuidv4} from 'uuid';
 
 export interface Server {
-	id: number;
+	id: string;
 	name: string;
 	ip?: string;
 	port?: number;
@@ -11,39 +12,41 @@ export interface Server {
 }
 
 export interface ServersState {
-	selected: number | null;
+	selected: string | null;
 	servers: Array<Server>;
+	editing: string | null;
 }
 
 const initialState: ServersState = {
-	selected: 1,
-   servers: [
-		{
-			id: 1,
-			name: "Server 1",
-		},
-		{
-			id: 2,
-			name: "Server 2",
-		},
-		{
-			id: 3,
-			name: "Server 3",
-		}
-	],
+	selected: null,
+   servers: [],
+	editing: null,
 };
 
 export const serversSlice = createSlice({
 	name: "servers",
 	initialState,
 	reducers: {
-		selectServer: (state, action: PayloadAction<number>) => {
+		selectServer: (state, action: PayloadAction<string>) => {
 			state.selected = action.payload;
 		},
 		add: (state, action: PayloadAction<Server>) => {
+			action.payload.id = uuidv4();
 			state.servers.push(action.payload);
 		},
-		remove: (state, action: PayloadAction<number>) => {
+		edit: (state, action: PayloadAction<string>) => {
+			state.editing = action.payload;
+		},
+		stopEdit: (state) => {
+			state.editing = null;
+		},
+		update: (state, action: PayloadAction<Server>) => {
+			const index = state.servers.findIndex((server) => server.id === action.payload.id);
+			if (index !== -1) {
+				state.servers[index] = action.payload;
+			}
+		},
+		remove: (state, action: PayloadAction<string>) => {
          state.servers = state.servers.filter((server) => server.id !== action.payload);
       },
 	},

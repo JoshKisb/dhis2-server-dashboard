@@ -21,6 +21,10 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.16",
     "@reduxjs/toolkit": "^1.9.3",
-    "react-redux": "^8.0.5"
+    "dotenv": "^16.0.3",
+    "highcharts": "^10.3.3",
+    "highcharts-react-official": "^3.2.0",
+    "react-redux": "^8.0.5",
+    "uuid": "^9.0.0"
   }
 }

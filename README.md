@@ -1,3 +1,7 @@
+# dhis2-server-dashboard  
+
+Manage servers with a dhis2 dashboard
+
 This project was bootstrapped with [DHIS2 Application Platform](https://github.com/dhis2/app-platform).
 
 ## Available Scripts

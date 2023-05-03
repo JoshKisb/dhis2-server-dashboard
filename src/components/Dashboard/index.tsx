@@ -1,8 +1,19 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import OnlineIndicator from "../OnlineIndicator";
-import { Box } from "@mui/material";
+import { Box, Button, Chip, Grid, Paper, Stack, styled } from "@mui/material";
+import FaceIcon from "@mui/icons-material/Face";
 import { useServers } from "../../stores";
+import DashboardChart from "./Chart";
+import ServerConfig from "../ServerConfig";
+
+const Item = styled(Paper)(({ theme }) => ({
+	backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+	...theme.typography.body2,
+	padding: theme.spacing(1),
+	textAlign: "center",
+	color: theme.palette.text.secondary,
+}));
 
 const Dashboard: React.FC = () => {
 	const store = useServers();
@@ -14,20 +25,44 @@ const Dashboard: React.FC = () => {
 				<>
 					<Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
 						<Typography variant="h4">{server.name}</Typography>
+						<Chip icon={<FaceIcon />} label={server.username} />
 						<OnlineIndicator />
 					</Box>
-					<Typography paragraph>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-						eiusmod tempor incididunt ut labore et dolore magna aliqua.
-						Rhoncus dolor purus non enim praesent elementum facilisis leo vel.
-						Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-						grav. Cursus euismod quis viverra nibh cras.
-						Metus vulputate eu scelerisque felis imperdiet proin fermentum
-						leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt
-						lobortis feugiat vivamus at augue. At augue eget arcu dictum
-						varius duis at consectetur lorem. Velit sed ullamcorper morbi
-						tincidunt. Lorem donec massa sapien faucibus et molestie ac.
-					</Typography>
+					<Grid container spacing={2}>
+						<Grid item xs={12} md={2}>
+							<Item elevation={0}>
+								<Stack spacing={2}>
+									<Button variant="contained">Start</Button>
+									<Button variant="contained">Stop</Button>
+									<Button variant="contained">Backup</Button>
+									<Button variant="contained">Postgres</Button>
+								</Stack>
+							</Item>
+						</Grid>
+						<Grid item xs={12} md={10}>
+							<Item elevation={0}>
+								<DashboardChart />
+								<Box
+									sx={{
+										display: "flex",
+										flexDirection: "column",
+										mt: 2,
+										alignItems: "flex-end",
+									}}
+								>
+									<Typography paragraph>Total Space: 100 GB</Typography>
+									<Typography paragraph>Used Space: 50 GB</Typography>
+									<Typography paragraph>Free Space: 50 GB</Typography>
+									<Typography paragraph>RAM: 8 GB</Typography>
+									<Typography paragraph>Uptime: 1 day</Typography>
+									<Typography paragraph>
+										Version: Ubuntu 20.04
+									</Typography>
+								</Box>
+							</Item>
+						</Grid>
+					</Grid>
+					<ServerConfig onClose={store.stopEdit} open={!!store.currentEdit} server={store.currentEditServer} />
 				</>
 			) : (
 				<Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>

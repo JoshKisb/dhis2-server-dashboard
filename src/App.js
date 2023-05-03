@@ -9,6 +9,10 @@ import "./styles/styles.css";
 import { Provider } from "react-redux";
 import { store } from "./stores";
 
+// require('do/tenv').config();
+
+console.log(process.env) 
+
 const query = {
 	me: {
 		resource: "me",
