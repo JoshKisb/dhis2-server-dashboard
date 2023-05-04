@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
 							</Item>
 						</Grid>
 					</Grid>
-					<ServerConfig onClose={store.stopEdit} open={!!store.currentEdit} server={store.currentEditServer} />
+					
 				</>
 			) : (
 				<Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>

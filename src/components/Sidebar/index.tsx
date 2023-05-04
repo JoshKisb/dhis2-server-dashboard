@@ -17,7 +17,7 @@ const drawerWidth = 320;
 
 const Sidebar: React.FC<{}> = () => {
 	const store = useServers();
-	const { isLoading, data: servers, isError } = useGetAllServersQuery();
+	const servers = store.servers;
 	const [open, setOpen] = React.useState(false);
 
 	const handleClose = () => {
@@ -84,6 +84,7 @@ const Sidebar: React.FC<{}> = () => {
 				</Box>
 			</>
 			<ServerConfig onClose={handleClose} open={open} />
+			<ServerConfig onClose={store.stopEdit} open={!!store.currentEdit} server={store.currentEditServer} />
 		</Drawer>
 	);
 };
