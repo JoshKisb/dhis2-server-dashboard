@@ -11,10 +11,11 @@ export const serversApi = createApi({
    endpoints: (builder) => ({
       getAllServers: builder.query<Server[], void>({
          query: () => `servers`,
-         providesTags: ['Servers'],
+         providesTags: [{ type: 'Servers', id: "LIST" }],
       }),
       getServerById: builder.query<Server, string>({
          query: (id) => `servers/${id}`,
+         providesTags: (result, error, id) => [{ type: 'Servers', id }],
       }),
       // ? Mutation: Create a server
       createServer: builder.mutation<Server, ServerForm>({
@@ -26,7 +27,7 @@ export const serversApi = createApi({
                body: data,
             };
          },
-         invalidatesTags: ["Servers"],
+         invalidatesTags: [{ type: 'Servers', id: "LIST" }],
          transformResponse: (response: Server ) => {
             console.log(response)
             return response
@@ -46,9 +47,9 @@ export const serversApi = createApi({
             result
                ? [
                     { type: "Servers", id },
-                    "Servers"
+                    { type: 'Servers', id: "LIST" }
                  ]
-               : ["Servers"],
+               : [{ type: 'Servers', id: "LIST" }],
          transformResponse: (response: Server ) => response,
       }),
       // ? Mutation: Delete server
@@ -60,7 +61,7 @@ export const serversApi = createApi({
                // credentials: "include",
             };
          },
-         invalidatesTags: ["Servers"],
+         invalidatesTags: [{ type: 'Servers', id: "LIST" }],
       }),
    }),
 });

@@ -11,7 +11,6 @@ import {
 import { useServers } from "../../stores";
 import ServerConfig from "../ServerConfig";
 import ServerCard from "./ServerCard";
-import { useGetAllServersQuery } from "../../services/servers";
 
 const drawerWidth = 320;
 
