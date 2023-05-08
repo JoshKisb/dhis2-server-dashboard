@@ -7,6 +7,22 @@
 	border-radius: 50%;
 	position: relative;
 }
+
+.small-online-indicator {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-left: 8px;
+	margin-right: 10px;
+	background-color: #0fcc45;
+	border-radius: 50%;
+	position: relative;
+}
+
+.small-online-indicator.offline {
+	background-color: #9d2115;
+}
+
 .blink {
 	display: block;
 	width: 15px;

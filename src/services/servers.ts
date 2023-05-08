@@ -2,6 +2,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getApiUrl } from "../utils/helpers";
 import { Server, ServerForm } from "../types/server";
+import { ScriptForm } from "../types/scripts";
 
 // Define a service using a base URL and expected endpoints
 export const serversApi = createApi({
@@ -52,6 +53,25 @@ export const serversApi = createApi({
                : [{ type: 'Servers', id: "LIST" }],
          transformResponse: (response: Server ) => response,
       }),
+      // ? Mutation: Run script 
+      runScript: builder.mutation<Server, { id: string; formData: ScriptForm }>({
+         query({ id, formData }) {
+            return {
+               url: `servers/${id}/run`,
+               method: "POST",
+               // credentials: "include",
+               body: formData,
+            };
+         },
+         invalidatesTags: (result, error, { id }) =>
+            result
+               ? [
+                    { type: "Servers", id },
+                    { type: 'Servers', id: "LIST" }
+                 ]
+               : [{ type: 'Servers', id: "LIST" }],
+         transformResponse: (response: Server ) => response,
+      }),
       // ? Mutation: Delete server
       deleteServer: builder.mutation<null, string>({
          query(id) {
@@ -73,5 +93,6 @@ export const {
    useCreateServerMutation,
    useDeleteServerMutation,
    useUpdateServerMutation,
+   useRunScriptMutation,
    useGetServerByIdQuery,
 } = serversApi;
