@@ -8,6 +8,7 @@ import {
    Chip,
    CircularProgress,
    Grid,
+   IconButton,
    Paper,
    Stack,
    Tab,
@@ -16,10 +17,12 @@ import {
    styled,
 } from "@mui/material";
 import FaceIcon from "@mui/icons-material/Face";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useServers } from "../../stores";
 import DashboardChart from "./Chart";
 import { useGetServerByIdQuery, useRunScriptMutation } from "../../services/servers";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { WebTerminal } from "./WebTerminal";
 
 const Item = styled(Paper)(({ theme }) => ({
    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -82,7 +85,12 @@ const ServerDashboard: React.FC = () => {
          {!!server && (
             <>
                <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-                  <Typography variant="h4">{server.name}</Typography>
+                  <div style={{ display: "flex" }}>
+                     <IconButton onClick={() => store.selectServer(null)}>
+                        <ArrowBackIcon />
+                     </IconButton>
+                     <Typography variant="h4">{server.name}</Typography>
+                  </div>
                   <Chip icon={<FaceIcon />} label={server.username} />
                   <OnlineIndicator />
                </Box>
@@ -166,11 +174,11 @@ const ServerDashboard: React.FC = () => {
                                        alignItems: "flex-end",
                                     }}
                                  >
-                                    <Typography paragraph>Total Space: 100 GB</Typography>
-                                    <Typography paragraph>Used Space: 50 GB</Typography>
-                                    <Typography paragraph>Free Space: 50 GB</Typography>
-                                    <Typography paragraph>RAM: 8 GB</Typography>
-                                    <Typography paragraph>Uptime: 1 day</Typography>
+                                    <Typography paragraph>Total Space: {server.info?.disk.total}</Typography>
+                                    <Typography paragraph>Used Space: {server.info?.disk.used}</Typography>
+                                    <Typography paragraph>Free Space: {server.info?.disk.free}</Typography>
+                                    <Typography paragraph>RAM: {server.info?.memory.total}</Typography>
+                                    <Typography paragraph>Uptime: {server.info?.uptime}</Typography>
                                     <Typography paragraph>Version: {server.info?.os?.PRETTY_NAME}</Typography>
                                  </Box>
                               </Box>
@@ -178,15 +186,30 @@ const ServerDashboard: React.FC = () => {
                         </TabPanel>
                         <TabPanel value="2">
                            <Item elevation={0}>
-                              <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                                 <Typography variant="h5">Terminal</Typography>
-                                 <Typography variant="h3">Coming Soon</Typography>
+                              <Box
+                                 sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    width: "100%",
+                                 }}
+                                 className="termbox"
+                              >
+                                 <WebTerminal />
                               </Box>
                            </Item>
                         </TabPanel>
                         <TabPanel value="3">
                            <Item elevation={0}>
-                              <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                              <Box
+                                 sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                 }}
+                              >
                                  <Typography variant="h5">Others</Typography>
                                  <Typography variant="h3">Coming Soon</Typography>
                               </Box>

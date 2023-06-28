@@ -26,7 +26,7 @@ export const useServers = () => {
    const { isLoading, data: servers, isError } = useGetAllServersQuery();
    const selected = useSelector((state: RootState) => state.servers.selected);
    const current = servers?.find((server) => server.id === selected);
-   const selectServer = (id: string) => dispatch(serversSlice.actions.selectServer(id));
+   const selectServer = (id: string|null) => dispatch(serversSlice.actions.selectServer(id));
    const currentEdit = useSelector((state: RootState) => state.servers.editing);
    const currentEditServer = servers?.find((server) => server.id === currentEdit);
    const edit = (id: string) => dispatch(serversSlice.actions.edit(id));

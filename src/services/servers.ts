@@ -8,7 +8,7 @@ import { ScriptForm } from "../types/scripts";
 export const serversApi = createApi({
    reducerPath: "serversApi",
    baseQuery: fetchBaseQuery({ baseUrl: getApiUrl() }),
-   tagTypes: ["Servers"],
+   tagTypes: ["Servers", "ServersWT"],
    endpoints: (builder) => ({
       getAllServers: builder.query<Server[], void>({
          query: () => `servers`,
@@ -17,6 +17,10 @@ export const serversApi = createApi({
       getServerById: builder.query<Server, string>({
          query: (id) => `servers/${id}`,
          providesTags: (result, error, id) => [{ type: 'Servers', id }],
+      }),
+      connectWebterminal: builder.query<Server, string>({
+         query: (id) => `servers/${id}/terminal`,
+         providesTags: (result, error, id) => [{ type: 'ServersWT', id }],
       }),
       // ? Mutation: Create a server
       createServer: builder.mutation<Server, ServerForm>({
@@ -95,4 +99,5 @@ export const {
    useUpdateServerMutation,
    useRunScriptMutation,
    useGetServerByIdQuery,
+   useConnectWebterminalQuery,
 } = serversApi;

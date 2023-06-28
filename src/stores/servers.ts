@@ -17,7 +17,7 @@ export const serversSlice = createSlice({
    name: "servers",
    initialState,
    reducers: {
-      selectServer: (state, action: PayloadAction<string>) => {
+      selectServer: (state, action: PayloadAction<string|null>) => {
          state.selected = action.payload;
       },
       edit: (state, action: PayloadAction<string>) => {

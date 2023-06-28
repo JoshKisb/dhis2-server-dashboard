@@ -2,10 +2,20 @@ import { useState } from "react";
 import Divider from "@mui/material/Divider";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteDialog from "./DeleteDialog";
-import { Box, Card, CardActionArea, CardHeader, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+   Box,
+   Card,
+   CardActionArea,
+   CardContent,
+   CardHeader,
+   IconButton,
+   Menu,
+   MenuItem,
+   Typography,
+} from "@mui/material";
 import React from "react";
 import { useServers } from "../../stores";
-import { useDeleteServerMutation } from "../../services/servers";
+import { useDeleteServerMutation, useGetServerByIdQuery } from "../../services/servers";
 import { Server } from "../../types/server";
 
 const ITEM_HEIGHT = 48;
@@ -16,6 +26,7 @@ interface ServerCardProps {
 
 const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
    const store = useServers();
+   const { isLoading, data } = useGetServerByIdQuery(server.id);
    const [deleteServer, { isLoading: deleting }] = useDeleteServerMutation();
    const [anchorEl, setAnchorEl] = useState(null);
    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -47,6 +58,10 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
       setDeleteDialogOpen(false);
    };
 
+   const handleSelect = (id: string) => {
+      store.selectServer(id);
+   };
+
    return (
       <Box sx={{ mx: 1, my: 1.2 }}>
          <Card
@@ -65,7 +80,7 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
                title={
                   <CardActionArea
                      onClick={() => {
-                        store.selectServer(server.id);
+                       handleSelect(server.id);
                      }}
                   >
                      {server.name}
@@ -100,6 +115,14 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
                onCancel={handleDeleteCancel}
                onConfirm={handleDeleteConfirm}
             />
+            <CardContent>
+               {isLoading && <Typography variant="body2">Loading...</Typography>}
+               {(!isLoading && !!data) && data.info?.containers.map((container) => (
+                  <Typography variant="body2" component="div">
+                     {container.name}
+                  </Typography>
+               ))}
+            </CardContent>
          </Card>
       </Box>
    );

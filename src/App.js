@@ -22,8 +22,7 @@ const query = {
 const MyApp = () => (
 	<Provider store={store}>
 		<Box sx={{ display: "flex" }}>
-			<CssBaseline />
-			<Sidebar />
+			<CssBaseline />			
 			<Box
 				component="main"
 				sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
