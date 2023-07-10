@@ -25,7 +25,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { WebTerminal } from "./WebTerminal";
 
 const Item = styled(Paper)(({ theme }) => ({
-   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#efefef",
    ...theme.typography.body2,
    padding: theme.spacing(1),
    textAlign: "center",
@@ -40,20 +40,6 @@ const ServerDashboard: React.FC = () => {
    const [runScript, { isLoading: isRunningScript, isError: scErr }] = useRunScriptMutation();
    const { data: server, isLoading, isError, error } = useGetServerByIdQuery(store.selected as any);
    const err: any = error; // coz ts being annoying
-
-   if (isLoading)
-      return (
-         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-            <CircularProgress />
-         </Box>
-      );
-
-   if (isError)
-      return (
-         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-            <Typography paragraph>{err.data.error || error.toString()}</Typography>
-         </Box>
-      );
 
    const handleChange = (event: React.MouseEvent<HTMLElement>, nextView: string) => {
       console.log(nextView);
@@ -80,21 +66,37 @@ const ServerDashboard: React.FC = () => {
       setTab(newValue);
    };
 
+   console.log(server);
+
    return (
       <>
-         {!!server && (
-            <>
-               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-                  <div style={{ display: "flex" }}>
-                     <IconButton onClick={() => store.selectServer(null)}>
-                        <ArrowBackIcon />
-                     </IconButton>
-                     <Typography variant="h4">{server.name}</Typography>
-                  </div>
+         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+            <div style={{ display: "flex" }}>
+               <IconButton onClick={() => store.selectServer(null)}>
+                  <ArrowBackIcon />
+               </IconButton>
+               <Typography variant="h4">{server?.name}</Typography>
+            </div>
+            {!!server && (
+               <>
                   <Chip icon={<FaceIcon />} label={server.username} />
                   <OnlineIndicator />
-               </Box>
+               </>
+            )}
+         </Box>
+         {isLoading && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+               <CircularProgress />
+            </Box>
+         )}
 
+         {isError && !isLoading && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+               <Typography paragraph>{err.data.error || error.toString()}</Typography>
+            </Box>
+         )}
+         {!!server && !isError && !isLoading && (
+            <>
                <Grid container spacing={2}>
                   <Grid item xs={12} md={2}>
                      <Item elevation={0}>
@@ -155,6 +157,7 @@ const ServerDashboard: React.FC = () => {
                                           disabled={!selectedContainer || isRunningScript}
                                           onClick={handleStart}
                                        >
+                                          {isRunningScript && script === "start" && <CircularProgress size={20} />}
                                           Start
                                        </Button>
                                        <Button
@@ -162,6 +165,7 @@ const ServerDashboard: React.FC = () => {
                                           disabled={!selectedContainer || isRunningScript}
                                           onClick={handleStop}
                                        >
+                                          {isRunningScript && script === "stop" && <CircularProgress size={20} />}
                                           Stop
                                        </Button>
                                     </Stack>

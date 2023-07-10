@@ -65,64 +65,69 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
    return (
       <Box sx={{ mx: 1, my: 1.2 }}>
          <Card
-            key={server.id}
+            key={server.id}            
             sx={{
                minWidth: 50,
+               height: "210px",
+               overflow: "hidden",
+               textOverflow: "ellipsis",
                backgroundColor: server.id === store.selected ? "#dddedf" : "#fff",
             }}
          >
-            <CardHeader
-               action={
-                  <IconButton aria-label="settings" onClick={handleClick}>
-                     <MoreVertIcon />
-                  </IconButton>
-               }
-               title={
-                  <CardActionArea
-                     onClick={() => {
-                       handleSelect(server.id);
-                     }}
-                  >
-                     {server.name}
-                  </CardActionArea>
-               }
-            ></CardHeader>
-
-            <Menu
-               id={`menu-${server.id}`}
-               anchorEl={anchorEl}
-               keepMounted
-               open={Boolean(anchorEl)}
-               onClose={handleClose}
-               PaperProps={{
-                  style: {
-                     maxHeight: ITEM_HEIGHT * 4.5,
-                     width: "20ch",
-                  },
+            <CardActionArea
+               sx={{ height: "100%" }}
+               onClick={() => {
+                  handleSelect(server.id);
                }}
             >
-               <MenuItem onClick={handleEdit}>Edit</MenuItem>
-               <MenuItem>
-                  <Divider sx={{ my: 0.5 }} />
-               </MenuItem>
-               <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-                  Delete
-               </MenuItem>
-            </Menu>
-            <DeleteDialog
-               open={deleteDialogOpen}
-               instanceName={server.name}
-               onCancel={handleDeleteCancel}
-               onConfirm={handleDeleteConfirm}
-            />
-            <CardContent>
-               {isLoading && <Typography variant="body2">Loading...</Typography>}
-               {(!isLoading && !!data) && data.info?.containers.map((container) => (
-                  <Typography variant="body2" component="div">
-                     {container.name}
-                  </Typography>
-               ))}
-            </CardContent>
+               <CardHeader
+                  action={
+                     <IconButton aria-label="settings" onClick={handleClick}>
+                        <MoreVertIcon />
+                     </IconButton>
+                  }
+                  title={server.name}
+                  />
+
+               <Menu
+                  id={`menu-${server.id}`}
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  PaperProps={{
+                     style: {
+                        maxHeight: ITEM_HEIGHT * 4.5,
+                        width: "20ch",
+                     },
+                  }}
+               >
+                  <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                  <MenuItem>
+                     <Divider sx={{ my: 0.5 }} />
+                  </MenuItem>
+                  <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+                     Delete
+                  </MenuItem>
+               </Menu>
+               <DeleteDialog
+                  open={deleteDialogOpen}
+                  instanceName={server.name}
+                  onCancel={handleDeleteCancel}
+                  onConfirm={handleDeleteConfirm}
+               />
+
+               <CardContent style={{ paddingTop: 4, height: "145px" }}>
+                  {isLoading && <Typography variant="body2">Loading...</Typography>}
+                  {!isLoading &&
+                     !!data &&
+                     data.info?.containers.map((container) => (
+                        <Typography variant="body2" component="div">
+                           {container.name}
+                        </Typography>
+                     ))}
+               </CardContent>
+            </CardActionArea>
          </Card>
       </Box>
    );

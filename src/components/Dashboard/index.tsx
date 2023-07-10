@@ -14,10 +14,18 @@ import {
    styled,
 } from "@mui/material";
 import FaceIcon from "@mui/icons-material/Face";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 import { useServers } from "../../stores";
 import ServerDashboard from "./ServerDashboard";
 import ServerCard from "../Sidebar/ServerCard";
 import ServerConfig from "../ServerConfig";
+
+const fabStyle = {
+   position: "absolute",
+   bottom: 16,
+   right: 16,
+};
 
 const Dashboard: React.FC = () => {
    const store = useServers();
@@ -39,6 +47,9 @@ const Dashboard: React.FC = () => {
             <ServerDashboard />
          ) : (
             <>
+               <Fab onClick={handleAddServer} color="primary" aria-label="add" sx={fabStyle}>
+                  <AddIcon />
+               </Fab>
                {!!servers && servers.length > 0 ? (
                   <Grid container spacing={2}>
                      {servers.map((server) => (
@@ -46,19 +57,6 @@ const Dashboard: React.FC = () => {
                            <ServerCard server={server} />
                         </Grid>
                      ))}
-                     <Grid item xs={12} sm={6} md={4}>
-                        <Box sx={{ mx: 1, my: 1.2 }}>
-                           <Card sx={{ minWidth: 50 }}>
-                              <CardActionArea onClick={handleAddServer}>
-                                 <CardContent>
-                                    <Typography variant="h5" color="text.secondary">
-                                       Add a server
-                                    </Typography>
-                                 </CardContent>
-                              </CardActionArea>
-                           </Card>
-                        </Box>
-                     </Grid>
                   </Grid>
                ) : (
                   <Box sx={{ mx: 1, my: 1.2 }}>
