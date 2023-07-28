@@ -35,6 +35,8 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
     setAnchorEl(event.currentTarget);
   };
 
@@ -42,12 +44,14 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
     setAnchorEl(null);
   };
 
-  const handleEdit = () => {
+  const handleEdit = (e) => {
+    e.stopPropagation();
     setAnchorEl(null);
     store.edit(server.id);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.stopPropagation();
     setAnchorEl(null);
     setDeleteDialogOpen(true);
   };
@@ -78,43 +82,41 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
           backgroundColor: server.id === store.selected ? "#dddedf" : "#fff",
         }}
       >
-        <CardHeader
-          // onClick={handleSelect}
-          action={
-            <IconButton aria-label="settings" onClick={handleClick}>
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={server.name}
-        />
-        <Menu
-          id={`menu-${server.id}`}
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          PaperProps={{
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: "20ch",
-            },
-          }}
-        >
-          <MenuItem onClick={handleEdit}>Edit</MenuItem>
-          <MenuItem>
-            <Divider sx={{ my: 0.5 }} />
-          </MenuItem>
-          <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-            Delete
-          </MenuItem>
-        </Menu>
-        <DeleteDialog
-          open={deleteDialogOpen}
-          instanceName={server.name}
-          onCancel={handleDeleteCancel}
-          onConfirm={handleDeleteConfirm}
-        />
         <CardActionArea onClick={handleSelect}>
+          <CardHeader
+            action={
+              <IconButton
+                aria-label="settings"
+                onClick={handleClick}
+                onMouseDown={(event) => event.stopPropagation()}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={server.name}
+          />
+          <Menu
+            id={`menu-${server.id}`}
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                maxHeight: ITEM_HEIGHT * 4.5,
+                width: "20ch",
+              },
+            }}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem>
+              <Divider sx={{ my: 0.5 }} />
+            </MenuItem>
+            <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+              Delete
+            </MenuItem>
+          </Menu>
+
           <CardContent style={{ paddingTop: 4, height: "145px" }}>
             {isLoading && <Typography variant="body2">Loading...</Typography>}
             {!isLoading &&
@@ -127,6 +129,12 @@ const ServerCard: React.FC<ServerCardProps> = ({ server }) => {
           </CardContent>
         </CardActionArea>
       </Card>
+      <DeleteDialog
+        open={deleteDialogOpen}
+        instanceName={server.name}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
     </Box>
   );
 };
