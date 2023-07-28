@@ -244,7 +244,8 @@ const options = {
 
 const DashboardChart = () => (
 	<Box width={"100%"}>
-		<HighchartsReact highcharts={Highcharts} options={options} />
+		{/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
+		<img src="/munin/lxd/postgres.lxd/postgres_connections_db-day.png" alt="munin postgres chart image" style={{ width: "100%", minHeight: 500 }} />
 	</Box>
 );
 
